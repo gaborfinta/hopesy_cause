@@ -9,19 +9,20 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async save(image_data) {
-        const filename = uuid.v4();
+        const filename = uuid.v4() + ".jpg";
         const file = admin.storage().bucket('hopesy-16904.appspot.com').file('causes/' + filename);
         await file.save(image_data);
         return filename;
     }
 
     async getById(path) {
-        const BASE_URL = "https://firebasestorage.googleapis.com/v0/b/hopesy-16904.appspot.com/o/causes%2F" + path;
-        console.log(BASE_URL);
-        let resp = await axios.get(BASE_URL);
-        console.log(resp);
-        const { downloadTokens } = resp.data;
-        return BASE_URL + '?alt=media&token=' + downloadTokens;
+        const file = admin.storage().bucket('hopesy-16904.appspot.com').file('causes/' + path);
+        const date = Date.parse('08 Apr 2020 00:12:00 GMT');
+        const url = await file.getSignedUrl({
+            action: "read",
+            expires: date
+        });
+        return url;
     }
 
     async getAll() {
