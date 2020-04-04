@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const DataStore = require('./datastore');
 const uuid = require('uuid');
+const axios = require('axios');
 
 class ImageStoreFirebase extends DataStore {
     constructor() {
@@ -8,20 +9,18 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async save(image_data) {
-        const filename = 'causes' + uuid.v4();
-        const file = admin.storage().bucket('hopesy-16904.appspot.com').file(filename);
+        const filename = uuid.v4();
+        const file = admin.storage().bucket('hopesy-16904.appspot.com').file('causes/' + filename);
         await file.save(image_data);
         return filename;
     }
 
     async getById(path) {
-        const file = admin.storage().bucket('hopesy-16904.appspot.com').file(path);
-        const date = Date.parse('08 Apr 2020 00:12:00 GMT');
-        const url = await file.getSignedUrl({
-            action: "read",
-            expires: date
-        });
-        return url;
+        const BASE_URL = "https://firebasestorage.googleapis.com/v0/b/hopesy-16904.appspot.com/o/causes%2" + path;
+        let resp = await axios.get(BASE_URL);
+        console.log(resp);
+        const { downloadTokens } = resp.data;
+        return BASE_URL + '?alt=media&token=' + downloadTokens;
     }
 
     async getAll() {
