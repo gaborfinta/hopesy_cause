@@ -10,10 +10,14 @@ class ImageStoreFirebase extends DataStore {
 
     async save(image_data) {
         const filename = uuid.v4() + ".jpg";
-        jpegImg = Buffer.from(image_data, 'base64');
+        console.log("Start image convert")
+        const jpegImg = Buffer.from(image_data, 'base64');
+        console.log("Image convert done")
         const file = admin.storage().bucket('hopesy-16904.appspot.com').file(
             ImageStoreFirebase.FOLDER + '/' + filename);
+        console.log("Saving image");
         await file.save(jpegImg, { contentType: "image/jpeg" });
+        console.log("Image saved");
         return filename;
     }
 
