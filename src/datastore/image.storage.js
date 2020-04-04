@@ -1,7 +1,6 @@
 const admin = require('firebase-admin');
 const DataStore = require('./datastore');
 const uuid = require('uuid');
-const stream = require('stream');
 
 class ImageStoreFirebase extends DataStore {
     constructor() {
@@ -12,25 +11,7 @@ class ImageStoreFirebase extends DataStore {
         const filename = uuid.v4() + ".jpg";
         const file = admin.storage().bucket('hopesy-16904.appspot.com').file(
             ImageStoreFirebase.FOLDER + '/' + filename);
-        const bufferStream = new stream.PassThrough();
-        bufferStream.end(Buffer.from(image_data, 'base64'));
-        bufferStream
-          .pipe(
-            file.createWriteStream({
-              metadata: {
-                contentType: 'image/jpeg',
-                metadata: {
-                  custom: 'metadata',
-                },
-              },
-              public: true,
-              validation: 'md5',
-            })
-          )
-          .on('error', function (err) {})
-          .on('finish', function () {
-            // The file upload is complete.
-          });
+        await file.save(image_data, { "contentType": "image/jpeg" });
         return filename;
     }
 
