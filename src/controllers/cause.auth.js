@@ -2,6 +2,7 @@ const Cause = require('../models/cause');
 
 const getImageURLsForCause = async (imageStore, cause) => {
     const { images } = cause;
+    console.log(cause);
     let imageURLs = [];
     for (const image_path in images) {
         let url = await imageStore.getById(image_path);
