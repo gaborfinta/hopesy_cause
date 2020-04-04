@@ -1,7 +1,11 @@
 const express = require('express');
-const routes = require('./src/router');
+const createRouter = require('./src/router');
 
-app = express();
-app.use('/', routes);
+function createApp(datastore) {
+    app = express();
+    app.use(express.json());
+    app.use('/', createRouter(datastore.causeStore));
+    return app;
+}
 
-module.exports = app;
+module.exports = createApp;
