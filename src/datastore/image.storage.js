@@ -10,13 +10,13 @@ class ImageStoreFirebase extends DataStore {
 
     async save(image_data) {
         const filename = uuid.v4() + ".jpg";
-        const file = admin.storage().bucket('hopesy-16904.appspot.com').file('causes/' + filename);
+        const file = admin.storage().bucket('hopesy-16904.appspot.com').file(ImageStoreFirebase.FOLDER + '/' + filename);
         await file.save(image_data);
         return filename;
     }
 
     async getById(path) {
-        const file = admin.storage().bucket('hopesy-16904.appspot.com').file('causes/' + path);
+        const file = admin.storage().bucket('hopesy-16904.appspot.com').file(ImageStoreFirebase.FOLDER + '/' + path);
         const date = Date.parse('08 Apr 2020 00:12:00 GMT');
         const url = await file.getSignedUrl({
             action: "read",
@@ -37,5 +37,7 @@ class ImageStoreFirebase extends DataStore {
         return "default.png";
     }
 }
+
+ImageStoreFirebase.FOLDER = "cause";
 
 module.exports = ImageStoreFirebase;

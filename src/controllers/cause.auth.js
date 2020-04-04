@@ -2,11 +2,11 @@ const Cause = require('../models/cause');
 
 const getImageURLsForCause = async (imageStore, cause) => {
     const { images } = cause;
-    console.log(cause);
-    console.log(images);
+    if (!images) {
+        return [];
+    }
     let imageURLs = [];
     for (let i = 0; i < images.length; i++) {
-        console.log(images[i]);
         let url = await imageStore.getById(images[i]);
         imageURLs.push(url);
     }
@@ -42,7 +42,7 @@ const save = (datastore) => async (req, res) => {
     let imageURLs = [];
     if (images && images.length) {
         for (let i = 0; i < images.length; i++) {
-            let url = await imageStore.save(images[i]);
+            let url = await imageStore.save(images[i], {contentType:"image/jpg"});
             imageURLs.push(url);
         };
     } else {
