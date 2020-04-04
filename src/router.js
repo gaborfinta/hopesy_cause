@@ -1,7 +1,10 @@
 const express = require('express');
-const hello = require('./controllers/hello_world');
+const addRoutes = require('./controllers/cause.auth');
 
-const router = express.Router();
-router.get('/', hello);
+function createRouter(datastore) {
+    const router = express.Router();
+    addRoutes(router, datastore);
+    return router;
+}
 
-module.exports = router;
+module.exports = createRouter;
