@@ -1,34 +1,27 @@
 const admin = require('firebase-admin');
 const DataStore = require('./datastore');
 const uuid = require('uuid');
-const axios = require('axios');
 
 // https://stackoverflow.com/questions/6850276/how-to-convert-dataurl-to-file-object-in-javascript
 function dataURItoBlob(dataURI) {
-    // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    console.log("dataURIToBlob");
     var byteString = atob(dataURI.split(',')[1]);
-
-    // separate out the mime component
     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-    // write the bytes of the string to an ArrayBuffer
+    console.log(mimeString);
     var ab = new ArrayBuffer(byteString.length);
     var ia = new Uint8Array(ab);
     for (var i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
 
-    //Old Code
-    //write the ArrayBuffer to a blob, and you're done
-    //var bb = new BlobBuilder();
-    //bb.append(ab);
-    //return bb.getBlob(mimeString);
+    const retVal = {
+        "data": ia,
+        "mimetype": mimeString
+    };
 
-    //New Code
-    return new Blob([ab], {type: mimeString});
+    console.log(retVal);
 
-
+    return retVal;
 }
 
 class ImageStoreFirebase extends DataStore {
@@ -39,12 +32,12 @@ class ImageStoreFirebase extends DataStore {
     async save(image_data) {
         const filename = uuid.v4() + ".jpg";
         console.log("Start image convert")
-        const jpegImg = dataURItoBlob(image_data);
+        const { data, mimeString } = dataURItoBlob(image_data);
         console.log("Image convert done")
         const file = admin.storage().bucket('hopesy-16904.appspot.com').file(
             ImageStoreFirebase.FOLDER + '/' + filename);
         console.log("Saving image");
-        await file.save(jpegImg);
+        await file.save(data, { "contentType": mimeString });
         console.log("Image saved");
         return filename;
     }
