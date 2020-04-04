@@ -38,6 +38,6 @@ class ImageStoreFirebase extends DataStore {
     }
 }
 
-ImageStoreFirebase.FOLDER = "cause";
+ImageStoreFirebase.FOLDER = "causes";
 
 module.exports = ImageStoreFirebase;
