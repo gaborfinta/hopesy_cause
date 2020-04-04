@@ -1,28 +1,7 @@
 const admin = require('firebase-admin');
 const DataStore = require('./datastore');
 const uuid = require('uuid');
-
-// https://stackoverflow.com/questions/6850276/how-to-convert-dataurl-to-file-object-in-javascript
-function dataURItoBlob(dataURI) {
-    console.log("dataURIToBlob");
-    var byteString = atob(dataURI.split(',')[1]);
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    console.log(mimeString);
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-
-    const retVal = {
-        "data": ia,
-        "mimetype": mimeString
-    };
-
-    console.log(retVal);
-
-    return retVal;
-}
+const stream = require('stream');
 
 class ImageStoreFirebase extends DataStore {
     constructor() {
@@ -31,14 +10,27 @@ class ImageStoreFirebase extends DataStore {
 
     async save(image_data) {
         const filename = uuid.v4() + ".jpg";
-        console.log("Start image convert")
-        const { data, mimeString } = dataURItoBlob(image_data);
-        console.log("Image convert done")
         const file = admin.storage().bucket('hopesy-16904.appspot.com').file(
             ImageStoreFirebase.FOLDER + '/' + filename);
-        console.log("Saving image");
-        await file.save(data, { "contentType": mimeString });
-        console.log("Image saved");
+        const bufferStream = new stream.PassThrough();
+        bufferStream.end(Buffer.from(image_data, 'base64'));
+        bufferStream
+          .pipe(
+            file.createWriteStream({
+              metadata: {
+                contentType: 'image/jpeg',
+                metadata: {
+                  custom: 'metadata',
+                },
+              },
+              public: true,
+              validation: 'md5',
+            })
+          )
+          .on('error', function (err) {})
+          .on('finish', function () {
+            // The file upload is complete.
+          });
         return filename;
     }
 
