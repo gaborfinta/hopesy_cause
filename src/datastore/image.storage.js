@@ -8,14 +8,14 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async save(image_data) {
-        const filename = "causes/" + uuid.v4();
-        const file = admin.storage().bucket().file(filename);
+        const filename = uuid.v4();
+        const file = admin.storage().bucket('causes').file(filename);
         await file.save(image_data);
         return filename;
     }
 
     async getById(path) {
-        const file = admin.storage().bucket().file(path);
+        const file = admin.storage().bucket('causes').file(path);
         const date = Date.parse('08 Apr 2020 00:12:00 GMT');
         const url = await file.getSignedUrl({
             action: "read",
