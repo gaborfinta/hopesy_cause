@@ -7,4 +7,4 @@ admin.initializeApp(functions.config().firebase);
 
 const app = createApp(DataStoreFactory('firebase'));
 
-exports.user = functions.https.onRequest(app);
+exports.cause = functions.https.onRequest(app);
