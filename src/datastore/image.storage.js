@@ -16,10 +16,10 @@ class ImageStoreFirebase extends DataStore {
 
     async getById(path) {
         const file = admin.storage().bucket().file(path);
-        const today = new Date();
+        const date = Date.parse('08 Apr 2020 00:12:00 GMT');
         const url = await file.getSignedUrl({
             action: "read",
-            expires: today.getDate() + 5
+            expires: date
         });
         return url;
     }
