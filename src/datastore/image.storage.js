@@ -17,6 +17,7 @@ class ImageStoreFirebase extends DataStore {
 
     async getById(path) {
         const BASE_URL = "https://firebasestorage.googleapis.com/v0/b/hopesy-16904.appspot.com/o/causes%2F" + path;
+        console.log(BASE_URL);
         let resp = await axios.get(BASE_URL);
         console.log(resp);
         const { downloadTokens } = resp.data;
@@ -32,7 +33,7 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async getDefault() {
-        return "causes/default.png";
+        return "default.png";
     }
 }
 
