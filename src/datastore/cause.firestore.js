@@ -27,7 +27,7 @@ class CauseStoreFirebase extends DataStore {
         const causes = await admin.firestore().collection('causes').get();
         causes.forEach(causeSnapshot => {
             let cause = { "id": causeSnapshot.id };
-            User.keys.forEach(key => { cause[key] = causeSnapshot.get(key); });
+            Cause.keys.forEach(key => { cause[key] = causeSnapshot.get(key); });
             causeList.push(new Cause(cause));
         });
 
