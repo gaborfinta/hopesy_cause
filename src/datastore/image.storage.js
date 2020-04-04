@@ -12,8 +12,8 @@ class ImageStoreFirebase extends DataStore {
         return url;
     }
 
-    async getById(url) {
-        throwNotImplementedError();
+    async getById(path) {
+        return path;
     }
 
     async getAll() {
