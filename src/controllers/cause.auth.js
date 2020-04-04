@@ -5,9 +5,9 @@ const getImageURLsForCause = async (imageStore, cause) => {
     console.log(cause);
     console.log(images);
     let imageURLs = [];
-    for (const image_path in images) {
-        console.log(image_path);
-        let url = await imageStore.getById(image_path);
+    for (let i = 0; i < images.length; i++) {
+        console.log(images[i]);
+        let url = await imageStore.getById(images[i]);
         imageURLs.push(url);
     }
     return imageURLs;
@@ -41,8 +41,8 @@ const save = (datastore) => async (req, res) => {
     const { images } = newCause;
     let imageURLs = [];
     if (images && images.length) {
-        for (const image_data in images) {
-            let url = await imageStore.save(image_data);
+        for (let i = 0; i < images.length; i++) {
+            let url = await imageStore.save(images[i]);
             imageURLs.push(url);
         };
     } else {
