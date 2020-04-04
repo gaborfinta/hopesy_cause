@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const DataStore = require('./datastore');
+const uuid = require('uuid');
 
 class ImageStoreFirebase extends DataStore {
     constructor() {
@@ -7,13 +8,16 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async save(image_data) {
-        const url = this.imageCount++;
-        this.images[url] = image_data;
-        return url;
+        const filename = "causes/" + uuid.v4();
+        const file = admin.storage().bucket().file(filename);
+        await file.save(image_data);
+        return filename;
     }
 
     async getById(path) {
-        return path;
+        const file = admin.storage().bucket().file(path);
+        const url = await file.getSignedUrl({});
+        return url;
     }
 
     async getAll() {
@@ -25,7 +29,7 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async getDefault() {
-        return "default";
+        return "causes/default.png";
     }
 }
 
