@@ -16,7 +16,7 @@ class ImageStoreFirebase extends DataStore {
     }
 
     async getById(path) {
-        const BASE_URL = "https://firebasestorage.googleapis.com/v0/b/hopesy-16904.appspot.com/o/causes%2" + path;
+        const BASE_URL = "https://firebasestorage.googleapis.com/v0/b/hopesy-16904.appspot.com/o/causes%2F" + path;
         let resp = await axios.get(BASE_URL);
         console.log(resp);
         const { downloadTokens } = resp.data;
