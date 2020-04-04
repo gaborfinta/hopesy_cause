@@ -42,7 +42,7 @@ const save = (datastore) => async (req, res) => {
     let imageURLs = [];
     if (images && images.length) {
         for (let i = 0; i < images.length; i++) {
-            let url = await imageStore.save(images[i], {contentType:"image/jpg"});
+            let url = await imageStore.save(images[i]);
             imageURLs.push(url);
         };
     } else {
