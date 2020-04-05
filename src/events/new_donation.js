@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 
-async function onDonationCreated(snap, context) {
+async function onNewDonation(snap, context) {
     console.log(snap.data());
     const { id, amount, cause_id } = snap.data();
     let causeReference = await admin.firestore().collection('causes').doc(cause_id);
@@ -15,4 +15,4 @@ async function onDonationCreated(snap, context) {
     await causeReference.set(causeData);
 }
 
-module.exports = onDonationCreated;
+module.exports = onNewDonation;
