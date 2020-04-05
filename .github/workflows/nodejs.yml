@@ -30,7 +30,7 @@ jobs:
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
       with: 
-        args: deploy --only functions:cause
+        args: deploy --only functions:cause,onDonationCreated
       env:
         CI: true
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
